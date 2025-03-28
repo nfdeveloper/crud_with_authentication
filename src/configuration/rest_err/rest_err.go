@@ -1,4 +1,4 @@
-package configuration
+package resterr
 
 import "net/http"
 
