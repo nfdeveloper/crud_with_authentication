@@ -5,6 +5,7 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/joho/godotenv"
+	"github.com/nfdeveloper/crud_with_authentication/src/configuration/database/mongodb"
 	"github.com/nfdeveloper/crud_with_authentication/src/configuration/logger"
 	"github.com/nfdeveloper/crud_with_authentication/src/controller"
 	"github.com/nfdeveloper/crud_with_authentication/src/controller/routes"
@@ -19,6 +20,8 @@ func main() {
 	if err != nil {
 		log.Fatal("Error loading .env file")
 	}
+
+	mongodb.InitConnection()
 
 	// Init Dependencies
 	service := service.NewUserDomainService()
