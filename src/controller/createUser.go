@@ -1,11 +1,14 @@
 package controller
 
 import (
-	"fmt"
+	"net/http"
 
 	"github.com/gin-gonic/gin"
+	"github.com/nfdeveloper/crud_with_authentication/src/configuration/logger"
 	"github.com/nfdeveloper/crud_with_authentication/src/configuration/validation"
 	"github.com/nfdeveloper/crud_with_authentication/src/controller/model/request"
+	"github.com/nfdeveloper/crud_with_authentication/src/model"
+	"go.uber.org/zap"
 )
 
 func CreateUser(c *gin.Context) {
@@ -19,5 +22,20 @@ func CreateUser(c *gin.Context) {
 		return
 	}
 
-	fmt.Println(userRequest)
+	domain := model.NewUserDomain(
+		userRequest.Email,
+		userRequest.Password,
+		userRequest.Name,
+		userRequest.Age,
+	)
+
+	if err := domain.CreateUser(); err != nil {
+		c.JSON(err.Code, err)
+		return
+	}
+
+	logger.Info("User created successfully",
+		zap.String("journey", "createUser"))
+
+	c.String(http.StatusOK, "")
 }
