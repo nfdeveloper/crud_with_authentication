@@ -5,10 +5,13 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/joho/godotenv"
+	"github.com/nfdeveloper/crud_with_authentication/src/configuration/logger"
 	"github.com/nfdeveloper/crud_with_authentication/src/controller/routes"
 )
 
 func main() {
+
+	logger.Info("About to start user application.")
 
 	err := godotenv.Load()
 	if err != nil {
