@@ -7,6 +7,7 @@ import (
 	"github.com/nfdeveloper/crud_with_authentication/src/configuration/logger"
 	resterr "github.com/nfdeveloper/crud_with_authentication/src/configuration/rest_err"
 	"github.com/nfdeveloper/crud_with_authentication/src/model"
+	"github.com/nfdeveloper/crud_with_authentication/src/model/repository/entity/converter"
 )
 
 const (
@@ -20,17 +21,14 @@ func (ur *userRepository) CreateUser(userDomain model.UserDomainInterface) (mode
 
 	collection := ur.databaseConnection.Collection(collection_name)
 
-	value, err := userDomain.GetJsonValue()
-	if err != nil {
-		return nil, resterr.NewInternalServerError(err.Error())
-	}
+	value := converter.ConvertDomainToEntity(userDomain)
 
 	result, err := collection.InsertOne(context.Background(), value)
 	if err != nil {
 		return nil, resterr.NewInternalServerError(err.Error())
 	}
 
-	userDomain.SetID(result.InsertedID.(string))
+	value.ID = result.InsertedID.(string)
 
-	return userDomain, nil
+	return converter.ConvertEntityToDomain(*value), nil
 }

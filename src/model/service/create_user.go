@@ -1,21 +1,23 @@
 package service
 
 import (
-	"fmt"
-
 	"github.com/nfdeveloper/crud_with_authentication/src/configuration/logger"
 	resterr "github.com/nfdeveloper/crud_with_authentication/src/configuration/rest_err"
 	"github.com/nfdeveloper/crud_with_authentication/src/model"
 	"go.uber.org/zap"
 )
 
-func (ud *userDomainService) CreateUser(userDomain model.UserDomainInterface) *resterr.RestErr {
+func (ud *userDomainService) CreateUser(userDomain model.UserDomainInterface) (model.UserDomainInterface, *resterr.RestErr) {
 
 	logger.Info("Init createUser model", zap.String("journey", "createUser"))
 
 	userDomain.EncryptPassword()
 
-	fmt.Println(ud)
+	userDomainRepository, err := ud.userRepository.CreateUser(userDomain)
 
-	return nil
+	if err != nil {
+		return nil, err
+	}
+
+	return userDomainRepository, nil
 }
